@@ -1,14 +1,42 @@
+<script setup>
+import LoginForm from '../components/LoginForm.vue'
+</script>
+
 <template>
-  <p>
-    {{ response }}
-  </p>
+  <div class="vue-content">
+    <header class="w-screen bg-red-600">
+      <ul class="flex flex-row">
+        <li class="p-2">
+          Login
+        </li>
+        <li class="p-2">
+          Home
+        </li>
+        <li class="p-2">
+          Profile
+        </li>
+      </ul>
+    </header>
+    <main>
+      <h2>Below is some content from the Drupal backend:</h2>
+      <div v-if="logged_in">
+        <p>
+          {{ response }}
+        </p>
+      </div>
+      <div v-else>
+        <LoginForm />
+      </div>
+    </main>
+  </div>
 </template>
 <script>
 export default {
   name: 'IndexPage',
   data () {
     return {
-      response: 'Loading please wait...'
+      response: 'Loading please wait...',
+      logged_in: false
     }
   },
   mounted () {
@@ -22,7 +50,7 @@ export default {
         console.log('We are on our way. Making changes.')
         druxt.getCollection('node--page').then((collection) => {
           console.log(collection.data[0].attributes.body.value)
-          this.response = collection.data[0].attributes.body.value
+          this.response = collection.data[0].attributes.body.value // output the data from the first page node as a test
         })
       }
     }
