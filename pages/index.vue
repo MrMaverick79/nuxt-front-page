@@ -6,26 +6,26 @@ import LoginForm from '../components/LoginForm.vue'
   <div class="vue-content">
     <header class="w-screen bg-red-600">
       <ul class="flex flex-row">
-        <li class="p-2">
-          Login
+        <li class="p-2" v-if="isUserLoggedIn">
+          <a href='#' @click="logOut">Logout</a>
         </li>
         <li class="p-2">
           Home
         </li>
-        <li class="p-2">
+        <li class="p-2" v-if="isUserLoggedIn">
           Profile
         </li>
       </ul>
     </header>
     <main>
       <h2>Below is some content from the Drupal backend:</h2>
-      <div v-if="logged_in">
+      <div v-if="isUserLoggedIn">
         <p>
           {{ response }}
         </p>
       </div>
       <div v-else>
-        <LoginForm />
+        <LoginForm @update-logged-in-status="updateLoggedInStatus" />
       </div>
     </main>
   </div>
@@ -33,10 +33,13 @@ import LoginForm from '../components/LoginForm.vue'
 <script>
 export default {
   name: 'IndexPage',
+  components: {
+    LoginForm
+  },
   data () {
     return {
       response: 'Loading please wait...',
-      logged_in: false
+      isUserLoggedIn: false
     }
   },
   mounted () {
@@ -53,7 +56,13 @@ export default {
           this.response = collection.data[0].attributes.body.value // output the data from the first page node as a test
         })
       }
+    },
+    updateLoggedInStatus (status) {
+      this.isUserLoggedIn = status
+    },
+    logOut () {
+      this.isUserLoggedIn = false
     }
-  } // end fetchData
+  }
 }
 </script>
